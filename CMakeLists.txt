@@ -3,19 +3,17 @@ project(VulkanTutorial)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
 
 find_package(Vulkan REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)
 
-include_directories(${Vulkan_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} "include")
-link_directories(${Vulkan_LIBRARY} ${GLFW_LIBRARY_DIRS})
-
+file(GLOB SRC_FILES src/*.cpp)
 add_executable(VulkanApp src/main.cpp)
 
-target_link_libraries(VulkanApp ${Vulkan_LIBRARIES} ${GLFW_LIBRARIES})
+target_include_directories(VulkanApp PUBLIC include)
+target_link_libraries(VulkanApp Vulkan::Vulkan glfw)
 
 if(APPLE)
   target_compile_definitions(VulkanApp PRIVATE VK_USE_PLATFORM_MACOS_MVK)

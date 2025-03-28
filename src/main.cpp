@@ -1,5 +1,4 @@
 #include "vulkan/vulkan_core.h"
-#include <algorithm>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -17,6 +16,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <cstdlib>
@@ -795,8 +795,8 @@ private:
       .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
       .colorAttachmentCount = 1,
       .pColorAttachments = &colorAttachmentRef,
+      .pResolveAttachments = &colorAttachmentResolveRef,
       .pDepthStencilAttachment = &depthAttachmentRef,
-      .pResolveAttachments = &colorAttachmentResolveRef
     };
 
     std::array<VkAttachmentDescription, 3> attachments = {
@@ -1047,11 +1047,11 @@ private:
       .depthWriteEnable = VK_TRUE,
       .depthCompareOp = VK_COMPARE_OP_LESS,
       .depthBoundsTestEnable = VK_FALSE,
-      .minDepthBounds = 0.0f,
-      .maxDepthBounds = 1.0f,
       .stencilTestEnable = VK_FALSE,
       .front = {},
-      .back = {}
+      .back = {},
+      .minDepthBounds = 0.0f,
+      .maxDepthBounds = 1.0f,
     };
 
     VkPipelineColorBlendAttachmentState colorBlendAttachment = {
@@ -1460,14 +1460,14 @@ private:
 
     VkImageMemoryBarrier barrier = {
       .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-      .image = image,
       .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
       .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+      .image = image,
       .subresourceRange = {
         .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .levelCount = 1,
         .baseArrayLayer = 0,
         .layerCount = 1,
-        .levelCount = 1
       }
     };
 
